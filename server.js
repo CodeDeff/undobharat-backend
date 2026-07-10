@@ -1,9 +1,11 @@
 import express from 'express'
 import cors from 'cors'
+import dotenv from 'dotenv'
+dotenv.config()
 import authRoutes from './src/routes/authRoutes.js';
 
 const app=express();
-const PORT = 3000
+const PORT = process.env.UB_PORT
 
 
 app.use(express.json());
