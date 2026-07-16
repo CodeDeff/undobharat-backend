@@ -1,5 +1,5 @@
 // auth.service.js
-
+import user from '../models/User.js'
 export const login = async (data) => {
 
     // const user = await User.findOne({ email: data.email });
