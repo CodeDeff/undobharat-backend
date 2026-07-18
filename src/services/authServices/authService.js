@@ -1,6 +1,14 @@
-import user from "../models/User.js";
+import path from 'path';
+import { fileURLToPath } from 'url';
+import user from "../../models/User.js";
 import jwt from 'jsonwebtoken';
 import bcrypt from "bcryptjs";
+import dotenv from 'dotenv'
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
 // Sign up user
 export const registerUser = async (userData) =>{
@@ -9,12 +17,12 @@ export const registerUser = async (userData) =>{
     const existingUser = await user.findOne({email});
     if (existingUser){
         throw new Error("User already exists");
-    }
-
+     }
+    const hashedPassword= await bcrypt.hash(password,10);
     const newUser = new user({
         fullname,
         email,
-        password: password
+        password: hashedPassword
     })
     return await newUser.save()
 }
@@ -30,9 +38,7 @@ export const loginUser = async(email, password) => {
         throw new Error("Invalid email or password");
     }
 
-    // Compared password
-    //console.log("password from req:", password);
-    //console.log("password from DB:", userRecord.password);
+ 
     const isMatch = await bcrypt.compare(password, userRecord.password);
 
     if(!isMatch){
