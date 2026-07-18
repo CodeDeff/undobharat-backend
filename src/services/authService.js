@@ -1,27 +1,44 @@
-// auth.service.js
-import user from '../models/User.js'
-export const login = async (data) => {
+import bcrypt from "bcryptjs";
+import user from "../models/User.js";
+import jwt from 'jsonwebtoken';
 
-    // const user = await User.findOne({ email: data.email });
+// Sign up user
+export const registerUser = async (userData) =>{
+    const {fullname, email, password} = userData;
 
-    // if (!user)
-    //     throw new Error("User not found");
+    const existingUser = await user.findOne({email});
+    if (existingUser){
+        throw new Error("User already exists");
+    }
 
-    // const isMatch = await bcrypt.compare(data.password, user.password);
+    const newUser = new user({
+        fullname,
+        email,
+        password: password
+    })
+    return await newUser.save()
+}
+    // Login User
+export const loginUser = async(email, password) => {
 
-    // if (!isMatch)
-    //     throw new Error("Invalid password");
+    //console.log("email receiving:", email);
+    const userRecord = await user.findOne({email});
 
-    // const token = jwt.sign(
-    //     { id: user._id },
-    //     process.env.JWT_SECRET
-    // );
+    // Check if user exists
 
-    // return {
-    //     success: true,
-    //     token
-    // };
-    console.log(data)
+    if (!userRecord){
+        throw new Error("Invalid email or password");
+    }
 
-    return data;
-};
+    // Compared password
+    //console.log("password from req:", password);
+    //console.log("password from DB:", userRecord.password);
+    const isMatch = await bcrypt.compare(password, userRecord.password);
+
+    if(!isMatch){
+        throw new Error("Invalid email or password")
+    }
+    // Generate JWT Token
+    const token = jwt.sign({id: userRecord._id}, process.env.JWT_SECRET, {expiresIn:'1h'});
+    return {token, userId: userRecord._id}
+}
