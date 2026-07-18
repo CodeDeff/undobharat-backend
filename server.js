@@ -7,7 +7,7 @@ import authRoutes from './src/routes/authRoutes.js';
 
 const app=express();
 const PORT = process.env.UB_PORT
-const MongoDbUri= process.env.MONGODB_URI
+const MongoDbUri= process.env.MONGODB_URL
 
 
 app.use(express.json());
