@@ -1,13 +1,13 @@
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
-dotenv.config()
 import ConnectDb from './src/config/dbconfig.js'
-import authRoutes from './src/routes/authRoutes.js';
+import authRoutes from './src/routes/authRoutes/authRoutes.js';
 
+dotenv.config()
 const app=express();
 const PORT = process.env.UB_PORT
-const MongoDbUri= process.env.MONGODB_URL
+const MongoDbUri= process.env.MONGODB_URI
 
 
 app.use(express.json());
