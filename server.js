@@ -19,6 +19,9 @@ ConnectDb(MongoDbUri)
 
 app.use("/api",authRoutes);
 
+app.get('/',(req,res)=>{
+    res.send("UndoBharat API Is Running..")
+})
 
 
 app.listen(PORT, ()=>{
