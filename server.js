@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(cors({
     origin: [
         "http://localhost:5173",
-        "https://undobharat-dev.netlify.app/",
+        "https://undobharat-git-developement-codedeffs-projects.vercel.app/",
         "https://undobharat.vercel.app/"
     ],
     credentials: true
