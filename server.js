@@ -13,12 +13,12 @@ const MongoDbUri= process.env.MONGODB_URI
 app.use(express.json());
 
 app.use(cors({
-    origin: [
-        "http://localhost:5173",
-        "https://undobharat-git-developement-codedeffs-projects.vercel.app/",
-        "https://undobharat.vercel.app/"
-    ],
-    credentials: true
+  origin: [
+    "http://localhost:5173",
+    "https://undobharat-git-developement-codedeffs-projects.vercel.app",
+    "https://undobharat.vercel.app"
+  ],
+  credentials: true,
 }));
 ConnectDb(MongoDbUri)
 
