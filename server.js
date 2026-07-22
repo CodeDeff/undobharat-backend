@@ -1,54 +1,73 @@
-import express from 'express'
-import cors from 'cors'
-import dotenv from 'dotenv'
-import ConnectDb from './src/config/dbconfig.js'
+import path from 'node:path';
+import { pathToFileURL } from 'node:url';
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import ConnectDb from './src/config/dbconfig.js';
 import authRoutes from './src/routes/authRoutes/authRoutes.js';
 
-dotenv.config()
-const app=express();
-const PORT = process.env.UB_PORT
-const MongoDbUri= process.env.MONGODB_URI
+dotenv.config();
 
+const PORT = process.env.UB_PORT || 5000;
+const MongoDbUri = process.env.MONGODB_URI;
 
-app.use(express.json());
 const allowedOrigins = [
-  "http://localhost:5173",
-  "https://undobharat-git-developement-codedeffs-projects.vercel.app",
-  "https://undobharat.vercel.app"
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://undobharat-git-developement-codedeffs-projects.vercel.app',
+  'https://undobharat.vercel.app'
 ];
- 
-app.set("trust proxy", 1);
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // allow Postman, curl
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    exposedHeaders: ['Content-Range', 'X-Content-Range']
-  })
-);
 
- 
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin) {
+      return callback(null, true);
+    }
 
+    const isAllowedOrigin =
+      allowedOrigins.includes(origin) ||
+      /^https:\/\/([a-z0-9-]+\.)*vercel\.app$/i.test(origin);
 
-ConnectDb(MongoDbUri)
+    if (isAllowedOrigin) {
+      return callback(null, true);
+    }
 
+    return callback(null, false);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range'],
+  optionsSuccessStatus: 204
+};
 
+export const createApp = ({ connectDb = true } = {}) => {
+  const app = express();
 
-app.use("/api",authRoutes);
+  app.use(express.json());
+  app.set('trust proxy', 1);
+  app.use(cors(corsOptions));
+  app.options(/(.*)/, cors(corsOptions));
 
-app.get('/',(req,res)=>{
-    res.send("UndoBharat API Is Running..")
-})
+  if (connectDb) {
+    ConnectDb(MongoDbUri);
+  }
 
+  app.use('/api', authRoutes);
 
-app.listen(PORT, ()=>{
-console.log(`Undobharat Server Running In Port ${PORT}`);
-});
+  app.get('/', (req, res) => {
+    res.send('UndoBharat API Is Running..');
+  });
+
+  return app;
+};
+
+const isDirectExecution =
+  process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url;
+
+if (isDirectExecution) {
+  const app = createApp();
+  app.listen(PORT, () => {
+    console.log(`Undobharat Server Running In Port ${PORT}`);
+  });
+}
