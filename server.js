@@ -13,8 +13,7 @@ const MongoDbUri = process.env.MONGODB_URI;
 
 const allowedOrigins = [
   'http://localhost:5173',
-  'http://localhost:3000',
-  'https://undobharat-git-developement-codedeffs-projects.vercel.app',
+  'https://undobharat.pages.dev',
   'https://undobharat.vercel.app'
 ];
 
