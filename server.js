@@ -16,22 +16,26 @@ const allowedOrigins = [
   "https://undobharat-git-developement-codedeffs-projects.vercel.app",
   "https://undobharat.vercel.app"
 ];
-
+ 
+app.set("trust proxy", 1);
 app.use(
   cors({
-    origin(origin, callback) {
-      // Allow requests with no origin (Postman, server-to-server)
-      if (!origin) return callback(null, true);
-
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true); // allow Postman, curl
       if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
       }
-
-      return callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Content-Range', 'X-Content-Range']
   })
-)
+);
+
+ 
 
 
 ConnectDb(MongoDbUri)
