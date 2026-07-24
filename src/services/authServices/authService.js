@@ -45,6 +45,7 @@ export const loginUser = async(email, password) => {
         throw new Error("Invalid email or password")
     }
     // Generate JWT Token
-    const token = jwt.sign({id: userRecord._id}, process.env.JWT_SECRET, {expiresIn:'1h'});
-    return {token, userId: userRecord._id}
+    const token = jwt.sign({id: userRecord._id,role:userRecord.role}, process.env.JWT_SECRET, {expiresIn:'1h'});
+
+    return {token, userId: userRecord._id,role:userRecord.role};
 }

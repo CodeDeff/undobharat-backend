@@ -3,6 +3,7 @@ import { pathToFileURL } from 'node:url';
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import cookieParser from "cookie-parser";
 import ConnectDb from './src/config/dbconfig.js';
 import authRoutes from './src/routes/authRoutes/authRoutes.js';
 
@@ -44,6 +45,7 @@ export const createApp = ({ connectDb = true } = {}) => {
   const app = express();
 
   app.use(express.json());
+  app.use(cookieParser());
   app.set('trust proxy', 1);
   app.use(cors(corsOptions));
   app.options(/(.*)/, cors(corsOptions));
@@ -57,7 +59,7 @@ export const createApp = ({ connectDb = true } = {}) => {
   app.get('/', (req, res) => {
     res.send('UndoBharat API Is Running..');
   });
-
+console.log("NODE_ENV:", process.env.NODE_ENV);
   return app;
 };
 
