@@ -29,7 +29,7 @@ export const registerUser = async (userData) =>{
     // Login User
 export const loginUser = async(email, password) => {
 
-    //console.log("email receiving:", email);
+    
     const userRecord = await user.findOne({email});
 
     // Check if user exists
