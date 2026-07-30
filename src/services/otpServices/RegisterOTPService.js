@@ -66,8 +66,8 @@ const sendOtpService = async (email) => {
 const getOTPByEmail = async (email ,otp) => {
   const res= await findOTP(email);
   const ismatch= await verifyOtp(otp, res.otp);
-  if(ismatch) return true
-  else return false
+  if(ismatch) return {msg:"OTP Verified", status:200}
+  else return  {msg:"OTP is not Matching", status:400}
 };
 
 const verifyOtp = async(originalotp, dbotp)=>{
