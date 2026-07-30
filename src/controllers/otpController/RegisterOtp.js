@@ -20,9 +20,8 @@ export const verifyOTP = async (req, res) => {
   try {
     const {email,otp}=req.body;
      const response = await otpService.getOTPByEmail(email, otp);
-
-    if (!response) {
-      return res.status(404).json({ message: 'OTP not found' });
+    if(response.status == 400){
+      return res.status(400).json({ message: response.msg });
     }
 
     return res.status(200).json({ message: "OTP Verified Sucessfully" });
