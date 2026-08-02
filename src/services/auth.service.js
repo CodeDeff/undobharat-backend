@@ -1,6 +1,6 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
-import user from "../../models/User.js";
+import user from "../models/User.model.js";
 import jwt from 'jsonwebtoken';
 import bcrypt from "bcryptjs";
 import dotenv from 'dotenv'
@@ -11,14 +11,14 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
 // Sign up user
-export const registerUser = async (userData) =>{
-    const {fullname, email, password} = userData;
+export const registerUser = async (userData) => {
+    const { fullname, email, password } = userData;
 
-    const existingUser = await user.findOne({email});
-    if (existingUser){
+    const existingUser = await user.findOne({ email });
+    if (existingUser) {
         throw new Error("User already exists");
-     }
-    const hashedPassword= await bcrypt.hash(password,10);
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new user({
         fullname,
         email,
@@ -26,26 +26,26 @@ export const registerUser = async (userData) =>{
     })
     return await newUser.save()
 }
-    // Login User
-export const loginUser = async(email, password) => {
+// Login User
+export const loginUser = async (email, password) => {
 
-    
-    const userRecord = await user.findOne({email});
+
+    const userRecord = await user.findOne({ email });
 
     // Check if user exists
 
-    if (!userRecord){
+    if (!userRecord) {
         throw new Error("Invalid email or password");
     }
 
- 
+
     const isMatch = await bcrypt.compare(password, userRecord.password);
 
-    if(!isMatch){
+    if (!isMatch) {
         throw new Error("Invalid email or password")
     }
     // Generate JWT Token
-    const token = jwt.sign({id: userRecord._id,role:userRecord.role}, process.env.JWT_SECRET, {expiresIn:'1h'});
+    const token = jwt.sign({ id: userRecord._id, role: userRecord.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    return {token, userId: userRecord._id,role:userRecord.role};
+    return { token, userId: userRecord._id, role: userRecord.role };
 }

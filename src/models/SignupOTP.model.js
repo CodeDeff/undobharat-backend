@@ -18,4 +18,4 @@ const signupOTP=new mongoose.Schema({
 
 })
 
-export default mongoose.model("SignupOTP", signupOTP);
+export default mongoose.model("SignupOTP.model", signupOTP);

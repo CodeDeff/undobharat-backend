@@ -1,4 +1,4 @@
-import signupOTP from '../models/SignupOTP.js'
+import signupOTP from '../models/SignupOTP.model.js'
 
 export const createNewOTP = async (email, otp) => {
     try {
