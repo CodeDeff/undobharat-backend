@@ -1,5 +1,5 @@
-import * as authController from '../../controllers/authController/authController.js'
-import { authMiddleware } from '../../middleware/authMiddleware.js';
+import * as authController from '../controllers/auth.controller.js'
+import { authMiddleware } from '../middleware/authMiddleware.js';
 import { Router } from "express"
 const router = Router();
 

@@ -1,4 +1,4 @@
-import * as otpService from '../../services/otpServices/RegisterOTPService.js';
+import * as otpService from '../services/registerOTP.service.js';
 
 export const sendRegisterterOTP = async (req, res) => {
   try {
@@ -18,9 +18,9 @@ export const sendRegisterterOTP = async (req, res) => {
 
 export const verifyOTP = async (req, res) => {
   try {
-    const {email,otp}=req.body;
-     const response = await otpService.getOTPByEmail(email, otp);
-    if(response.status == 400){
+    const { email, otp } = req.body;
+    const response = await otpService.getOTPByEmail(email, otp);
+    if (response.status == 400) {
       return res.status(400).json({ message: response.msg });
     }
 

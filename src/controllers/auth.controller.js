@@ -1,4 +1,4 @@
-import * as authServices from '../../services/authServices/authService.js'
+import * as authServices from '../services/auth.service.js'
 
 // User Register or Signup
 

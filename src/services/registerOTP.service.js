@@ -3,7 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import SibApiV3Sdk from 'sib-api-v3-sdk';
 import bcrypt from 'bcryptjs';
-import { createNewOTP, deleteOTPSign, findOTP } from '../../repositorys/SignupOTPRepository.js';
+import { createNewOTP, deleteOTPSign, findOTP } from '../repositorys/SignupOTP.repository.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -63,14 +63,14 @@ const sendOtpService = async (email) => {
 };
 
 //finding otp by mail
-const getOTPByEmail = async (email ,otp) => {
-  const res= await findOTP(email);
-  const ismatch= await verifyOtp(otp, res.otp);
-  if(ismatch) return {msg:"OTP Verified", status:200}
-  else return  {msg:"OTP is not Matching", status:400}
+const getOTPByEmail = async (email, otp) => {
+  const res = await findOTP(email);
+  const ismatch = await verifyOtp(otp, res.otp);
+  if (ismatch) return { msg: "OTP Verified", status: 200 }
+  else return { msg: "OTP is not Matching", status: 400 }
 };
 
-const verifyOtp = async(originalotp, dbotp)=>{
+const verifyOtp = async (originalotp, dbotp) => {
   try {
     return await bcrypt.compare(originalotp, dbotp);
   } catch (error) {
