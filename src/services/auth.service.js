@@ -1,9 +1,9 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
-import user from "../models/User.model.js";
 import jwt from 'jsonwebtoken';
 import bcrypt from "bcryptjs";
 import dotenv from 'dotenv'
+import * as authRepo from '../repositorys/auth.repository.js'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,30 +12,22 @@ dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
 // Sign up user
 export const registerUser = async (userData) => {
-    const { fullname, email, password } = userData;
-
-    const existingUser = await user.findOne({ email });
-    if (existingUser) {
-        throw new Error("User already exists");
+    try {
+        const userRecord = await authRepo.createNewUser(userData)
+        const { password, ...newUserData } = userRecord;
+        return newUserData
+    } catch (error) {
+        throw error;
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new user({
-        fullname,
-        email,
-        password: hashedPassword
-    })
-    return await newUser.save()
 }
 // Login User
 export const loginUser = async (email, password) => {
 
 
-    const userRecord = await user.findOne({ email });
-
+    const userRecord = await authRepo.findUserByEmail(email)
     // Check if user exists
-
     if (!userRecord) {
-        throw new Error("Invalid email or password");
+        throw new Error("User Not Found");
     }
 
 
@@ -45,7 +37,29 @@ export const loginUser = async (email, password) => {
         throw new Error("Invalid email or password")
     }
     // Generate JWT Token
-    const token = jwt.sign({ id: userRecord._id, role: userRecord.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: userRecord._id, role: userRecord.role,email: userRecord.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    return { token, userId: userRecord._id, role: userRecord.role };
+    return { token, userId: userRecord._id, role: userRecord.role, email: userRecord.email };
+}
+
+export const logout = async (req, res) => {
+    try {
+        res.clearCookie("jwt");
+    } catch (error) {
+        throw Error(error.message)
+    }
+
+
+}
+
+export const UpdatePassword = async (email, password) => {
+    try {
+        return await authRepo.UpdatePassword(email, password);
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const authentication = async (userId, userRole, userEmail) => {
+    return { userId: userId, role: userRole, email: userEmail };
 }

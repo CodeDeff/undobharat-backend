@@ -5,8 +5,8 @@ const router = Router();
 
 router.post("/auth/signup", authController.signUp);
 router.post("/auth/login", authController.logIn);
+router.get("/auth/me", authMiddleware, authController.authentication);
+router.put("/auth/update-password", authController.UpdateUserPassword);
+router.post("/auth/logout", authController.logOut);
 
-router.get("/me", authMiddleware, (req, res) => {
-    res.json({ userId: req.userId, role: req.userRole });
-});
 export default router;

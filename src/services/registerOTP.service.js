@@ -51,14 +51,15 @@ const sendOtpService = async (email) => {
     await deleteOTPSign(email);
 
     const otp = generateOTP();
+    console.log(otp);
     const hashedOTP = await bcrypt.hash(otp, 10);
 
     await createNewOTP(email, hashedOTP);
     await sendOtpToEmail(email, otp);
 
-    return true;
+    return { success: true, status: 200 };
   } catch (error) {
-    throw error;
+    return { success: false, status: 500 };
   }
 };
 
@@ -66,8 +67,8 @@ const sendOtpService = async (email) => {
 const getOTPByEmail = async (email, otp) => {
   const res = await findOTP(email);
   const ismatch = await verifyOtp(otp, res.otp);
-  if (ismatch) return { msg: "OTP Verified", status: 200 }
-  else return { msg: "OTP is not Matching", status: 400 }
+  if (ismatch) return { msg: "OTP Verified", success: true, status: 200 }
+  else return { msg: "OTP is not Matching", success: false, status: 400 }
 };
 
 const verifyOtp = async (originalotp, dbotp) => {
