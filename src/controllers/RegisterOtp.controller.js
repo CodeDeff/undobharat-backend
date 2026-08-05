@@ -24,9 +24,10 @@ export const verifyOTP = async (req, res) => {
       return res.status(400).json({ message: response.msg });
     }
 
-    return res.status(200).json({ message: "OTP Verified Sucessfully" });
+    return res.status(200).json({ message: "OTP Verified Sucessfully",success: response.success });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: error.message });
   }
 };
+
