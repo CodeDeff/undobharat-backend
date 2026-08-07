@@ -27,7 +27,7 @@ export const deleteOTPSign = async (email) => {
 
 export const findOTP = async (email) => {
     try {
-        return signupOTP.findOne({ email }, { otp: 1, _id: 0 })
+       return signupOTP.findOne({ email }, { otp: 1, _id: 0, expiresAt: 1 });
     } catch (error) {
         throw error;
     }
