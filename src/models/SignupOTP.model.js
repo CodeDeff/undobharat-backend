@@ -13,7 +13,12 @@ const signupOTP=new mongoose.Schema({
     },
     createdAt:{
         type:Date,
-        default: new Date(Date.now() + 5 * 60 * 1000)
+        default: Date.now
+    },
+    expiresAt:{
+        type:Date,
+        default: () => new Date(Date.now() + 3 * 60 * 1000),
+        expires: 0
     }
 
 })

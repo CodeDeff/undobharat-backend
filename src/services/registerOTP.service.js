@@ -58,9 +58,16 @@ const sendOtpService = async (email) => {
 //finding otp by mail
 const getOTPByEmail = async (email, otp) => {
   const res = await findOTP(email);
+
   if (!res || !res.otp) {
     return { msg: "OTP not found or expired", success: false, status: 400 };
   }
+
+  if(res && res.expiresAt < new Date()) {
+    await deleteOTPSign(email);
+    return { msg: "OTP has expired", success: false, status: 400 };
+  }
+
   const ismatch = await verifyOtp(otp, res.otp);
   if (ismatch) return { msg: "OTP Verified", success: true, status: 200 }
   else return { msg: "OTP is not Matching", success: false, status: 400 }
