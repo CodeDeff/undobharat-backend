@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import ConnectDb from './src/config/dbconfig.js';
 import authRoutes from './src/routes/auth.routes.js';
 import otpRoutes from './src/routes/rotp.routes.js'
+import newIssue from './src/routes/issue.route.js'
 
 dotenv.config();
 
@@ -57,11 +58,11 @@ export const createApp = ({ connectDb = true } = {}) => {
 
   app.use('/api', authRoutes);
   app.use('/api', otpRoutes);
+  app.use('/api', newIssue);
 
   app.get('/', (req, res) => {
     res.send('UndoBharat API Is Running..');
   });
-  console.log("NODE_ENV:", process.env.NODE_ENV);
   return app;
 };
 
