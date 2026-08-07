@@ -14,7 +14,7 @@ dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 export const registerUser = async (userData) => {
     try {
         const userRecord = await authRepo.createNewUser(userData)
-        const { password, ...newUserData } = userRecord;
+        const { password, ...newUserData } = userRecord.toObject();
         return newUserData
     } catch (error) {
         throw error;
@@ -62,4 +62,17 @@ export const UpdatePassword = async (email, password) => {
 
 export const authentication = async (userId, userRole, userEmail) => {
     return { userId: userId, role: userRole, email: userEmail };
+}
+
+export const getUserDetailsByEmail=async(email)=>{
+    try {
+        const user= await authRepo.findUserByEmail(email);
+        if(!user){
+            throw new Error("User Not Found");
+        }
+        const { password, ...userWithoutPassword } = user.toObject();
+        return {status:200, user:userWithoutPassword};
+    } catch (error) {
+        throw error;
+    }
 }

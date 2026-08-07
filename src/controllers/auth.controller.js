@@ -4,16 +4,32 @@ import * as authServices from '../services/auth.service.js'
 
 export const signUp = async (req, res) => {
   try {
-    const user = await authServices.registerUser(req.body);
-    res.status(201).json({
-      message: "User Registered Successfully",
-      userId: user._id
-    })
+    const { fullname, email, password } = req.body;
+
+    if (!fullname || !email || !password) {
+      return res.status(400).json({ message: "All fields (fullname, email, password) are required" });
+    }
+
+
+    // 2. Store user details in database
+    const user = await authServices.registerUser({
+      fullname,
+      email,
+      password
+    });
+    // const {Userpassword, ...newUser}= user
+    // console.log("New User Data", newUser)
+    return res.status(201).json({  
+      message: "User registered successfully",
+      data: user
+    });
+
   } catch (error) {
-    console.log("Error:", error)
-    res.status(500).json({ message: error.message });
-
-
+    console.log("Error:", error);
+    if (error.message === "User already exist") {
+      return res.status(400).json({ message: "User already exists" });
+    }
+    return res.status(500).json({ message: error.message });
   }
 }
 // User Login
@@ -90,3 +106,17 @@ export const logOut = async (req, res) => {
   }
 }
 
+export const getUserDetails = async (req, res) => {
+  try {
+    const email= req.userEmail
+    const response = await authServices.getUserDetailsByEmail(email);
+    if (response.status === 200) {
+      return res.status(200).json({ message: "User details fetched successfully", data: response.user })
+    }
+    else {
+      return res.status(404).json({ message: response.message })
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
+}

@@ -61,7 +61,6 @@ export const createApp = ({ connectDb = true } = {}) => {
   app.get('/', (req, res) => {
     res.send('UndoBharat API Is Running..');
   });
-  console.log("NODE_ENV:", process.env.NODE_ENV);
   return app;
 };
 

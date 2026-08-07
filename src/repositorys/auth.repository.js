@@ -20,7 +20,7 @@ export const createNewUser = async (userData) => {
 
 export const findUserByEmail = async (email) => {
     try {
-        return await user.findOne({ email });
+        return await user.findOne({ email }).select("+password");
     } catch (error) {
         throw error;
     }
@@ -31,7 +31,7 @@ export const UpdatePassword = async (email, password) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         const updatedUser = await user.findOneAndUpdate(
             { email },
-            { $set: { password : hashedPassword} },
+            { $set: { password: hashedPassword } },
             { new: true }
         );
         if (!updatedUser) throw new Error("User Not Found");
