@@ -2,6 +2,8 @@ import signupOTP from '../models/SignupOTP.model.js'
 
 export const createNewOTP = async (email, otp) => {
     try {
+
+        await deleteOTPSign(email);
         const newOTP = new signupOTP({
             email,
             otp,
@@ -16,16 +18,16 @@ export const createNewOTP = async (email, otp) => {
 
 export const deleteOTPSign = async (email) => {
     try {
-        await signupOTP.deleteMany({ email })
+        return await signupOTP.deleteMany({ email })
     }
     catch (error) {
         throw error;
     }
 }
 
-export const findOTP= async(email)=>{
+export const findOTP = async (email) => {
     try {
-        return signupOTP.findOne({email},{otp:1, _id:0})
+        return signupOTP.findOne({ email }, { otp: 1, _id: 0 })
     } catch (error) {
         throw error;
     }

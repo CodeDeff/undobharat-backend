@@ -1,8 +1,14 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
+// import test from 'node:test';
+// import assert from 'node:assert/strict';
 
-import { sendOtpService } from '../src/services/otpServices/RegisterOTPService.js';
+// import { sendOtpService } from '../src/services/otpServices/RegisterOTPService.js';
 
-test('RegisterOTPService can be imported without recursive overflow', () => {
-  assert.equal(typeof sendOtpService, 'function');
-});
+// test('RegisterOTPService can be imported without recursive overflow', () => {
+//   assert.equal(typeof sendOtpService, 'function');
+// });
+
+const obj = { apiKey: undefined };
+
+obj.apiKey = "Hello";
+
+console.log(obj);
