@@ -66,6 +66,7 @@ export const authentication = async (userId, userRole, userEmail) => {
 
 export const getUserDetailsByEmail=async(email)=>{
     try {
+        console.log("i am from service",email)
         const user= await authRepo.findUserByEmail(email);
         if(!user){
             throw new Error("User Not Found");
