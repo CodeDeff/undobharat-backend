@@ -44,7 +44,14 @@ export const loginUser = async (email, password) => {
 
 export const logout = async (req, res) => {
     try {
-        res.clearCookie("jwt");
+        console.log("Logging out user with email:", req.userEmail);
+         const isProduction = process.env.NODE_ENV === "production";
+
+        res.clearCookie("jwt", {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? "none" : "lax",
+        });
     } catch (error) {
         throw Error(error.message)
     }
