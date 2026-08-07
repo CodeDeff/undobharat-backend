@@ -3,8 +3,6 @@ import jwt from 'jsonwebtoken'
 dotenv.config();
 
 export const authMiddleware = (req, res, next) => {
-    console.log(req.cookies);
-    console.log(req.cookies.jwt);
     const token = req.cookies?.jwt;
     if (!token) {
         return res.status(401).json({ message: "Unauthorized" });

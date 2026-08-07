@@ -44,8 +44,7 @@ export const loginUser = async (email, password) => {
 
 export const logout = async (req, res) => {
     try {
-        console.log("Logging out user with email:", req.userEmail);
-         const isProduction = process.env.NODE_ENV === "production";
+          const isProduction = process.env.NODE_ENV === "production";
 
         res.clearCookie("jwt", {
         httpOnly: true,
@@ -73,8 +72,7 @@ export const authentication = async (userId, userRole, userEmail) => {
 
 export const getUserDetailsByEmail=async(email)=>{
     try {
-        console.log("i am from service",email)
-        const user= await authRepo.findUserByEmail(email);
+         const user= await authRepo.findUserByEmail(email);
         if(!user){
             throw new Error("User Not Found");
         }

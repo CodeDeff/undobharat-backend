@@ -110,8 +110,7 @@ export const getUserDetails = async (req, res) => {
   try {
     const email= req.userEmail
     const response = await authServices.getUserDetailsByEmail(email);
-    console.log("User Details Response-controller:", response);
-    if (response.status === 200) {
+     if (response.status === 200) {
       return res.status(200).json({ message: "User details fetched successfully", data: response.user })
     }
     else {
