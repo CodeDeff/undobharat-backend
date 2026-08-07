@@ -72,9 +72,12 @@ const issueSchema = mongoose.Schema(
         type: [String], // Store image URL or file path
         required: true
       },
+
+  issueStatus : {
+    type: String,
+    required: true,
+    enum:["Pending", "In Progress", "Resolved"]
+   }
   },
-
 );
-
-export default mongoose.model("Issue", issueSchema);
-
+export default mongoose.model("Issue.model", issueSchema);
