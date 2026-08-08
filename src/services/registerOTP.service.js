@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import bcrypt from 'bcryptjs';
 import { createNewOTP, deleteOTPSign, findOTP } from '../repositorys/SignupOTP.repository.js';
 import getBrevoClient from '../config/brevo.config.js'
+import {findUserByEmail} from '../repositorys/auth.repository.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,10 +36,23 @@ const sendOtpToEmail = async (email, otp) => {
   }
 };
 // Main Code
-const sendOtpService = async (email) => {
+const sendOtpService = async (email, forgot) => {
   try {
     if (!email) {
-      throw new Error('Enter email Id');
+      return { success: false, status: 404, msg: "Email is required" };
+    }
+
+    if (forgot) {
+       const user = await findUserByEmail(email);
+    if (!user) {
+      return { success: false, status: 404, msg: "User not found" };
+    }
+    }else{
+
+      const user = await findUserByEmail(email);
+      if (user) {
+        return { success: false, status: 404, msg: "User already exist" };
+      }
     }
 
     const otp = generateOTP();
@@ -48,10 +62,10 @@ const sendOtpService = async (email) => {
     await createNewOTP(email, hashedOTP);
     await sendOtpToEmail(email, otp);
 
-    return { success: true, status: 200 };
+    return { success: true, status: 200 , msg: "OTP sent successfully" };
   } catch (error) {
     console.log(error)
-    return { success: false, status: 500 };
+    return { success: false, status: 500, msg: "Failed to send OTP" };
   }
 };
 
@@ -69,7 +83,7 @@ const getOTPByEmail = async (email, otp) => {
   }
 
   const ismatch = await verifyOtp(otp, res.otp);
-  if (ismatch) return { msg: "OTP Verified", success: true, status: 200 }
+  if (ismatch) return { msg: "OTP Verified Sucessfully", success: true, status: 200 }
   else return { msg: "OTP is not Matching", success: false, status: 400 }
 };
 
